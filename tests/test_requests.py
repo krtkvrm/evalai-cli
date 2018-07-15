@@ -216,6 +216,15 @@ class TestHTTPErrorRequests(BaseTestClass):
         expected = self.expected.format(url)
         assert response == expected
 
+    @responses.activate
+    def test_display_challenge_stats_for_http_error_404(self):
+        runner = CliRunner()
+        result = runner.invoke(challenge, ['10', 'stats'])
+        response = result.output.rstrip()
+        url = "{}{}".format(API_HOST_URL, URLS.challenge_phase_list.value).format("10")
+        expected = self.expected.format(url)
+        assert response == expected
+
 
 class TestSubmissionDetailsWhenObjectDoesNotExist(BaseTestClass):
 
@@ -286,11 +295,77 @@ class TestTeamsWhenObjectDoesNotExist(BaseTestClass):
         assert response == expected
 
     @responses.activate
-    def test_participate_in_a_challenge_when_object_does_not_exist(self):
+    def test_participate_in_a_challenge_for_object_does_not_exist(self):
         runner = CliRunner()
         result = runner.invoke(challenge, ['2', 'participate', '3'])
         response = result.output.rstrip()
         assert response == self.expected
+
+
+class TestDisplayChallengeStatsWhenObjectDoesNotExist(BaseTestClass):
+
+    def setup(self):
+        challenge_phase_list_json = json.loads(challenge_response.challenge_phase_stats)
+        url = "{}{}"
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.challenge_phase_list.value).format('1'),
+                      json=challenge_phase_list_json, status=200)
+
+    @responses.activate
+    def test_display_challenge_count_stats_url_for_object_does_not_exist(self):
+        url = "{}{}"
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.count_stats.value).format('1', '3'),
+                      status=404)
+        runner = CliRunner()
+        result = runner.invoke(challenge, ['1', 'stats'])
+        response = result.output.rstrip()
+        url = "{}{}".format(API_HOST_URL, URLS.count_stats.value).format("1", "3")
+        assert response == "404 Client Error: Not Found for url: {}".format(url)
+
+    @responses.activate
+    def test_display_challenge_last_submission_stats_url_for_object_does_not_exist(self):
+        url = "{}{}"
+        challenge_count_stats_json = json.loads(challenge_response.challenge_count_stats)
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.count_stats.value).format('1', '3'),
+                      json=challenge_count_stats_json, status=200)
+
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.last_submission_stats.value).format('1', '3'),
+                      status=404)
+        runner = CliRunner()
+        result = runner.invoke(challenge, ['1', 'stats'])
+        response = result.output.rstrip()
+        url = "{}{}".format(API_HOST_URL, URLS.last_submission_stats.value).format("1", "3")
+        assert response == "404 Client Error: Not Found for url: {}".format(url)
+
+
+class TestDisplayChallengeStatsForRequestException(BaseTestClass):
+
+    def setup(self):
+        challenge_phase_list_json = json.loads(challenge_response.challenge_phase_stats)
+        url = "{}{}"
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.challenge_phase_list.value).format('1'),
+                      json=challenge_phase_list_json, status=200)
+
+    @responses.activate
+    def test_display_challenge_count_stats_url_for_request_exception(self):
+        url = "{}{}"
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.count_stats.value).format('1', '3'),
+                      body=RequestException('...'))
+        runner = CliRunner()
+        result = runner.invoke(challenge, ['1', 'stats'])
+        assert result.exit_code == 1
+
+    @responses.activate
+    def test_display_challenge_last_submission_stats_url_for_request_exception(self):
+        url = "{}{}"
+        challenge_count_stats_json = json.loads(challenge_response.challenge_count_stats)
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.count_stats.value).format('1', '3'),
+                      json=challenge_count_stats_json, status=200)
+
+        responses.add(responses.GET, url.format(API_HOST_URL, URLS.last_submission_stats.value).format('1', '3'),
+                      body=RequestException('...'))
+        runner = CliRunner()
+        result = runner.invoke(challenge, ['1', 'stats'])
+        assert result.exit_code == 1
 
 
 class TestTeamsWhenTeamNameAlreadyExists(BaseTestClass):
@@ -435,7 +510,7 @@ class TestRequestForExceptions(BaseTestClass):
         # Phase URLS
 
         responses.add(responses.GET, url.format(API_HOST_URL, URLS.challenge_phase_list.value).format('10'),
-                      body=Exception('...'))
+                      body=RequestException('...'))
 
         responses.add(responses.GET, url.format(API_HOST_URL, URLS.challenge_phase_detail.value).format('10', '20'),
                       body=Exception('...'))
@@ -524,7 +599,7 @@ class TestRequestForExceptions(BaseTestClass):
     def test_display_challenge_phase_list_for_request_exception(self):
         runner = CliRunner()
         result = runner.invoke(challenge, ['10', 'phases'])
-        assert result.exit_code == -1
+        assert result.exit_code == 1
 
     @responses.activate
     def test_display_challenge_phase_detail_for_request_exception(self):
@@ -576,3 +651,9 @@ class TestRequestForExceptions(BaseTestClass):
         runner = CliRunner()
         result = runner.invoke(challenge, ["1"])
         assert result.output.strip() == "..."
+
+    @responses.activate
+    def test_display_challenge_stats_for_request_exception(self):
+        runner = CliRunner()
+        result = runner.invoke(challenge, ['10', 'stats'])
+        assert result.exit_code == 1

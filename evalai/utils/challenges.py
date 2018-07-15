@@ -444,7 +444,7 @@ def display_leaderboard(challenge_id, phase_split_id):
 
 def pretty_print_challenge_stats(stats):
     """
-    Pretty print the leaderboard for a particular CPS.
+    Pretty print the stats for a challenge.
     """
     table = BeautifulTable(max_width=150)
     table.column_headers = ["ID", "Phase", "Total Submissions", "Latest Submission At"]
