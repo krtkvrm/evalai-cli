@@ -12,7 +12,7 @@ from .teams import teams
 @click.pass_context
 def main(ctx):
     """
-    Welcome to the EvalAI CLI.
+    Welcome to the EvalAI CLI
     """
     if ctx.invoked_subcommand is None:
         welcome_text = ("Welcome to the EvalAI CLI. Use evalai --help for viewing all the options\n"

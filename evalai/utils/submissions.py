@@ -15,14 +15,14 @@ from evalai.utils.common import (validate_token,
 
 def make_submission(challenge_id, phase_id, file, submission_metadata={}):
     """
-    Make submission to a particular challenge.
+    Make submission to a particular challenge
 
     Args
     ----------
-    challenge_id: int
+    challenge_id: Int
         Challenge ID
 
-    phase_id: int
+    phase_id: Int
         Phase ID
 
     file: Click.File
@@ -82,7 +82,7 @@ def make_submission(challenge_id, phase_id, file, submission_metadata={}):
 
 def pretty_print_my_submissions_data(submissions, start_date, end_date):
     """
-    Pretty print the submissions for a particular Challenge.
+    Pretty print the submissions for a particular Challenge
 
     Args
     ----------
@@ -126,14 +126,14 @@ def pretty_print_my_submissions_data(submissions, start_date, end_date):
 
 def display_my_submission_details(challenge_id, phase_id, start_date, end_date):
     """
-    Fetch and display all of user's submissions.
+    Fetch and display all of user's submissions
 
     Args
     ----------
-    challenge_id: int
+    challenge_id: Int
         Challenge ID
 
-    phase_id: int
+    phase_id: Int
         Phase ID
 
     Raises
@@ -204,7 +204,7 @@ def display_submission_details(submission_id):
 
     Args
     ----------
-    submission_id: int
+    submission_id: Int
         Submission ID
 
     Raises
