@@ -259,8 +259,9 @@ html, body, ul, li {
 }
 body {
     font-family: "Roboto",  sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     color: #000;
+    font-weight: 300;
 }
 p {
     font-family: "Roboto",  sans-serif;
@@ -936,14 +937,15 @@ footer ul.primary-nav li:last-child a {
 .title {
     color: #000;
     float: left;
-    margin-top: 6px;
+    vertical-align: middle;
+    /*margin-top: 6px;*/
     margin-left: 15px;
-    font-size: 20px;
-    font-weight: 600
+    font-size: 35px;
+    font-weight: 300
 }
 
 .jumbotron-style {
-    background-color: #3F51B5;
+    background-color: #283e54;
     margin-bottom: 0px;
 }
 
@@ -990,6 +992,7 @@ footer ul.primary-nav li:last-child a {
     margin-top: 32px;
     letter-spacing: -0.01em;
     line-height: 1.22em;
+    font-weight: 300;
 }
 
 #img-pos {
@@ -1015,4 +1018,9 @@ footer ul.primary-nav li:last-child a {
 
 #class-padding {
     padding: 108px 0;
+}
+
+.sub-heading{
+    text-decoration: none !important;
+    color: black;
 }
