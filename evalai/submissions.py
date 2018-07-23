@@ -7,9 +7,26 @@ from evalai.utils.submissions import display_submission_details
 @click.argument('SUBMISSION', type=int)
 def submission(submission):
     """
-    View submission specific details.
+    Details of a particular submission
     """
     """
-    Invoked by `evalai submission SUBMISSION`.
+    Args
+    ----------
+    submission: Submission ID
+
+    Returns
+    -------
+    String: Submission details
+
+    Raises
+    -------
+    requests.exceptions.HTTPError
+        Server throws 4XX error
+    requests.exceptions.RequestException
+        Server throws request exception
+
+    Command
+    -------
+    evalai submission SUBMISSION
     """
     display_submission_details(submission)
