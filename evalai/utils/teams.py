@@ -13,6 +13,8 @@ from evalai.utils.config import EVALAI_ERROR_CODES
 
 def pretty_print_team_data(teams, is_host):
     """
+    Description
+    ----------
     Pretty print the team data
 
     Args
@@ -24,6 +26,10 @@ def pretty_print_team_data(teams, is_host):
     -------
     BeautifuleTable: BeautifulTable Object (string)
        Tabular teams
+
+    Raises
+    ----------
+    None
     """
     table = BeautifulTable(max_width=200)
     attributes = ["id", "team_name", "created_by"]
@@ -46,7 +52,13 @@ def pretty_print_team_data(teams, is_host):
 
 def display_teams(is_host):
     """
+    Description
+    ----------
     Fetch and display the participant or host teams of a user
+
+    Args
+    ----------
+    None
 
     Raises
     -------
@@ -54,6 +66,10 @@ def display_teams(is_host):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Returns
+    ----------
+    None
     """
     url = "{}{}"
     headers = get_request_header()
@@ -86,6 +102,8 @@ def display_teams(is_host):
 
 def create_team(team_name, team_url, is_host):
     """
+    Description
+    ----------
     Create new participant or host team
 
     Args
@@ -153,6 +171,8 @@ def create_team(team_name, team_url, is_host):
 
 def participate_in_a_challenge(challenge_id, participant_team_id):
     """
+    Description
+    ----------
     Request participation in a particular challenge
 
     Args
