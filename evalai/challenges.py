@@ -48,6 +48,7 @@ class Challenge(object):
 
         Reference
         ----------
+        Read upon click paradigms
         https://pocoo-click.readthedocs.io/en/latest/complex/
         """
         self.challenge_id = challenge
@@ -79,6 +80,7 @@ class PhaseGroup(click.Group):
 
         Reference
         ----------
+        Read upon click paradigms
         https://pocoo-click.readthedocs.io/en/latest/advanced/
         """
         if "--json" in tuple(ctx.protected_args):

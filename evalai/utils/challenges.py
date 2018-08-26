@@ -37,6 +37,10 @@ def pretty_print_challenge_data(challenges):
     -------
     ValueError
         Invalid Date Format
+
+    Returns
+    ----------
+    None
     """
     table = BeautifulTable(max_width=200)
     attributes = ["id", "title", "short_description"]
@@ -69,6 +73,10 @@ def display_challenges(url):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Returns
+    ----------
+    None
     """
     header = get_request_header()
     try:
@@ -94,7 +102,21 @@ def display_challenges(url):
 
 def display_all_challenge_list():
     """
+    Description
+    ----------
     Fetch and display all challenges
+
+    Args
+    ----------
+    None
+
+    Raises
+    ----------
+    None
+
+    Returns
+    ----------
+    None
     """
     url = "{}{}".format(get_host_url(), URLS.challenge_list.value)
     display_challenges(url)
@@ -103,6 +125,18 @@ def display_all_challenge_list():
 def display_past_challenge_list():
     """
     Fetch and display past challenges
+
+    Args
+    ----------
+    None
+
+    Raises
+    ----------
+    None
+
+    Returns
+    ----------
+    None
     """
     url = "{}{}".format(get_host_url(), URLS.past_challenge_list.value)
     display_challenges(url)
@@ -110,7 +144,13 @@ def display_past_challenge_list():
 
 def display_ongoing_challenge_list():
     """
+    Description
+    ----------
     Fetch and display ongoing challenges
+
+    Args
+    ----------
+    None
 
     Raises
     -------
@@ -118,6 +158,10 @@ def display_ongoing_challenge_list():
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Returns
+    ----------
+    None
     """
     url = "{}{}".format(get_host_url(), URLS.challenge_list.value)
 
@@ -152,7 +196,21 @@ def display_ongoing_challenge_list():
 
 def display_future_challenge_list():
     """
+    Description
+    ----------
     Fetch and display upcoming challenges
+
+    Args
+    ----------
+    None
+
+    Raises
+    ----------
+    None
+
+    Returns
+    ----------
+    None
     """
     url = "{}{}".format(get_host_url(), URLS.future_challenge_list.value)
     display_challenges(url)
@@ -160,6 +218,8 @@ def display_future_challenge_list():
 
 def get_participant_or_host_teams(url):
     """
+    Description
+    ----------
     Fetch the participant or host teams corresponding to the URL
 
     Args
@@ -200,6 +260,8 @@ def get_participant_or_host_teams(url):
 
 def get_participant_or_host_team_challenges(url, teams):
     """
+    Description
+    ----------
     Fetch and display the challenges corresponding to the participant or host URL
 
     Args
@@ -242,6 +304,8 @@ def get_participant_or_host_team_challenges(url, teams):
 
 def display_participated_or_hosted_challenges(is_host=False, is_participant=False):
     """
+    Description
+    ----------
     Fetch and display the participated or hosted challenges by a user
 
     Args
@@ -257,6 +321,10 @@ def display_participated_or_hosted_challenges(is_host=False, is_participant=Fals
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Returns
+    ----------
+    None
     """
 
     challenges = []
@@ -304,6 +372,8 @@ def display_participated_or_hosted_challenges(is_host=False, is_participant=Fals
 
 def pretty_print_challenge_details(challenge):
     """
+    Description
+    ----------
     Pretty print the challenge details
 
     Args
@@ -336,6 +406,8 @@ def pretty_print_challenge_details(challenge):
 
 def display_challenge_details(challenge):
     """
+    Description
+    ----------
     Fetch and display challenge details of a particular challenge
 
     Args
@@ -349,6 +421,10 @@ def display_challenge_details(challenge):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Returns
+    ----------
+    None
     """
     url = URLS.challenge_details.value
     url = "{}{}".format(get_host_url(), url)
@@ -376,6 +452,8 @@ def display_challenge_details(challenge):
 
 def pretty_print_all_challenge_phases(phases):
     """
+    Description
+    ----------
     Pretty print all the challenge phases of a challenge
 
     Args
@@ -387,6 +465,10 @@ def pretty_print_all_challenge_phases(phases):
     -------
     BeautifuleTable: BeautifulTable Object (string)
        Tabular challenge phases
+
+    Returns
+    ----------
+    None
     """
     table = BeautifulTable(max_width=150)
     attributes = ["id", "name", "challenge"]
@@ -402,6 +484,8 @@ def pretty_print_all_challenge_phases(phases):
 
 def display_challenge_phase_list(challenge_id):
     """
+    Description
+    ----------
     Fetch and display all challenge phases for a particular challenge
 
     Args
@@ -415,6 +499,10 @@ def display_challenge_phase_list(challenge_id):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Returns
+    ----------
+    None
     """
     url = URLS.challenge_phase_list.value
     url = "{}{}".format(get_host_url(), url)
@@ -443,12 +531,18 @@ def display_challenge_phase_list(challenge_id):
 
 def pretty_print_challenge_phase_data(phase):
     """
+    Description
+    ----------
     Pretty print the details of a challenge phase
 
     Args
     ----------
     phases: dict
         Challenge phase details as json
+
+    Raises
+    ----------
+    None
 
     Returns
     -------
@@ -490,6 +584,8 @@ def pretty_print_challenge_phase_data(phase):
 
 def display_challenge_phase_detail(challenge_id, phase_id, is_json):
     """
+    Description
+    ----------
     Fetch and display details of a challenge phase
 
     Args
@@ -509,6 +605,10 @@ def display_challenge_phase_detail(challenge_id, phase_id, is_json):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Raises
+    ----------
+    None
     """
     url = URLS.challenge_phase_detail.value
     url = "{}{}".format(get_host_url(), url)
@@ -545,6 +645,8 @@ def display_challenge_phase_detail(challenge_id, phase_id, is_json):
 
 def pretty_print_challenge_phase_split_data(phase_splits):
     """
+    Description
+    ----------
     Pretty print the details of a Challenge Phase Split
 
     Args
@@ -556,6 +658,10 @@ def pretty_print_challenge_phase_split_data(phase_splits):
     -------
     BeautifuleTable: BeautifulTable Object (string)
        Tabular challenge phase splits
+
+    Raises
+    ----------
+    None
     """
     table = BeautifulTable(max_width=100)
     attributes = ["id", "dataset_split_name", "challenge_phase_name"]
@@ -571,6 +677,8 @@ def pretty_print_challenge_phase_split_data(phase_splits):
 
 def display_challenge_phase_split_list(challenge_id):
     """
+    Description
+    ----------
     Fetch and display Challenge Phase Splits of a particular challenge
 
     Args
@@ -584,6 +692,10 @@ def display_challenge_phase_split_list(challenge_id):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Raises
+    ----------
+    None
     """
     url = URLS.challenge_phase_split_detail.value
     url = "{}{}".format(get_host_url(), url)
@@ -616,6 +728,8 @@ def display_challenge_phase_split_list(challenge_id):
 
 def pretty_print_leaderboard_data(attributes, results):
     """
+    Description
+    ----------
     Pretty print the leaderboard for a particular CPS
 
     Args
@@ -630,6 +744,10 @@ def pretty_print_leaderboard_data(attributes, results):
     -------
     BeautifuleTable: BeautifulTable Object (string)
        Tabular leaderboards of a challenge
+
+    Raises
+    ----------
+    None
     """
     leaderboard_table = BeautifulTable(max_width=150)
     attributes = ["Rank", "Participant Team"] + attributes + ["Last Submitted"]
@@ -648,6 +766,8 @@ def pretty_print_leaderboard_data(attributes, results):
 
 def display_leaderboard(challenge_id, phase_split_id):
     """
+    Description
+    ----------
     Fetch and display the Leaderboard of a particular CPS
 
     Args
@@ -664,6 +784,10 @@ def display_leaderboard(challenge_id, phase_split_id):
         Server throws 4XX error
     requests.exceptions.RequestException
         Server throws request exception
+
+    Raises
+    ----------
+    None
     """
     url = "{}{}".format(get_host_url(), URLS.leaderboard.value)
     url = url.format(phase_split_id)
