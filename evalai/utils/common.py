@@ -9,7 +9,21 @@ from dateutil import tz
 
 class Date(click.ParamType):
     """
+    Descriptions
+    ----------
     Date object parsed using datetime
+
+    Args
+    ----------
+    None
+
+    Raises
+    ----------
+    None
+
+    Returns
+    ----------
+    None
     """
     name = 'date'
 
@@ -26,6 +40,8 @@ class Date(click.ParamType):
 
 def validate_token(response):
     """
+    Descriptions
+    ----------
     Function to check if the authentication token provided by user is valid or not
 
     Args
@@ -36,6 +52,10 @@ def validate_token(response):
     Returns
     -------
     String: Validation of the request
+
+    Raises
+    ----------
+    None
     """
     if('detail' in response):
         if (response['detail'] == 'Invalid token'):
@@ -49,6 +69,8 @@ def validate_token(response):
 
 def validate_date_format(date):
     """
+    Descriptions
+    ----------
     Validate date format against EvalAI standards
 
     Args
@@ -74,6 +96,8 @@ def validate_date_format(date):
 
 def convert_UTC_date_to_local(date):
     """
+    Descriptions
+    ----------
     Convert the date from UTC to local
 
     Args
@@ -85,6 +109,10 @@ def convert_UTC_date_to_local(date):
     -------
     date: string
         Validated date and converted from UTC to local
+
+    Raises
+    ----------
+    None
     """
     # Format date
     date = validate_date_format(date)
@@ -100,6 +128,8 @@ def convert_UTC_date_to_local(date):
 
 def clean_data(data):
     """
+    Descriptions
+    ----------
     Strip HTML and clean spaces
 
     Args
@@ -111,6 +141,10 @@ def clean_data(data):
     -------
     data: String
         HTML stripped data to avoid overflow
+
+    Raises
+    ----------
+    None
     """
     data = BeautifulSoup(data, "lxml").text.strip()
     data = ' '.join(data.split())
