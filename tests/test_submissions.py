@@ -7,7 +7,7 @@ from dateutil import tz
 
 from evalai.challenges import challenge
 from evalai.submissions import submission
-from tests.data import submission_response
+from tests.data import submission_response, challenge_response
 
 from evalai.utils.config import API_HOST_URL
 from evalai.utils.urls import URLS
@@ -91,6 +91,33 @@ class TestMakeSubmission(BaseTestClass):
             responses.POST,
             url.format(API_HOST_URL, URLS.make_submission.value).format("1", "2"),
             json=self.submission,
+            status=200,
+        )
+
+        # To get AWS Credentials
+        url = "{}{}"
+        responses.add(
+            responses.POST,
+            url.format(API_HOST_URL, URLS.get_aws_credentials.value).format("2"),
+            json=json.loads(submission_response.aws_credentials),
+            status=200,
+        )
+
+        # To get Challenge Phase Details
+        url = "{}{}"
+        responses.add(
+            responses.POST,
+            url.format(API_HOST_URL, URLS.challenge_phase_details.value).format("2"),
+            json=json.loads(challenge_response.challenge_phase_details),
+            status=200,
+        )
+
+        # To get Challenge Details
+        url = "{}{}"
+        responses.add(
+            responses.POST,
+            url.format(API_HOST_URL, URLS.challenge_details.value).format("2"),
+            json=json.loads(challenge_response.challenge_details),
             status=200,
         )
 
