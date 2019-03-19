@@ -149,6 +149,7 @@ class TestDisplayChallengeDetails(BaseTestClass):
         )
         table.append_row(values)
         expected = str(table)
+        print(table)
 
         runner = CliRunner()
         result = runner.invoke(challenge, ["1"])
