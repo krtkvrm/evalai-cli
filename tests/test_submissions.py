@@ -206,7 +206,7 @@ class TestMakeSubmission(BaseTestClass):
 
             result = runner.invoke(
                 push,
-                ["alpine", "3.6", "-p", "2"],
+                ["alpine:3.6", "-p", "2"],
             )
             print(result.output.strip())
             assert result.exit_code == 0
