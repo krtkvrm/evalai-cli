@@ -208,5 +208,6 @@ class TestMakeSubmission(BaseTestClass):
                 push,
                 ["alpine", "3.6", "-p", "2"],
             )
+            print(result.output.strip())
             assert result.exit_code == 0
             assert result.output.strip() == "HELLO"
