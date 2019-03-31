@@ -43,8 +43,6 @@ def push(image, phase):
     """
     Invoked by `evalai push IMAGE:TAG -p PHASE_ID`.
     """
-    print("HELLO WORLD!")
-    return
     if len(image.split(":")) != 2:
         message = "\nError: Please enter the tag name with image.\n\nFor eg: `evalai push ubuntu:latest --phase 123`"
         notify_user(message, color="red")
