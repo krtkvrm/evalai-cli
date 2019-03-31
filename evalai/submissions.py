@@ -50,7 +50,7 @@ def push(image, phase):
 
     tag = image[1]
     docker_client = docker.from_env()
-    print(client.containers.list())
+    print(docker_client.containers.list())
     try:
         docker_image = docker_client.images.get(image)
     except docker.errors.ImageNotFound:
