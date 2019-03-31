@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil import tz
 
 from evalai.challenges import challenge
-from evalai.submissions import submission
+from evalai.submissions import submission, push
 from tests.data import submission_response, challenge_response
 
 from evalai.utils.config import API_HOST_URL
@@ -187,3 +187,26 @@ class TestMakeSubmission(BaseTestClass):
             )
             assert result.exit_code == 0
             assert result.output.strip() == expected
+    
+    @responses.activate
+    def test_make_submission_for_docker_based_challenge(self):
+        # expected = "{}\n{}".format(
+        #     expected,
+        #     (
+        #         "Your file {} with the ID {} is successfully submitted.\n\n"
+        #         "You can use `evalai submission {}` to view this "
+        #         "submission's status."
+        #     ).format("test_file.txt", "9", "9"),
+        # )
+
+        runner = CliRunner()
+        with runner.isolated_filesystem():
+            with open("test_file.txt", "w") as f:
+                f.write("1 2 3 4 5 6")
+
+            result = runner.invoke(
+                push,
+                ["alpine", "3.6", "-p", "2"],
+            )
+            assert result.exit_code == 0
+            assert result.output.strip() == "HELLO"

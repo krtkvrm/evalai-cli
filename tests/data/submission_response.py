@@ -150,6 +150,6 @@ aws_credentials = """
             "RetryAttempts": 0
         }
     },
-    "docker_repository_uri": "ABCDEFGHIJKLMNOPQRTUVWXYZ"
+    "docker_repository_uri": "aws_account_id.dkr.ecr.us-east-1.amazonaws.com/evalai-test-repository"
 }
 """
