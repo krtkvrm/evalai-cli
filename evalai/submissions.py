@@ -48,9 +48,9 @@ def push(image, phase):
         notify_user(message, color="red")
         sys.exit(1)
 
-    tag = image[1]
+    tag = image.split(":")[1]
+    print("TAG: {}".format(tag))
     docker_client = docker.from_env()
-    print(docker_client.containers.list())
     try:
         docker_image = docker_client.images.get(image)
     except docker.errors.ImageNotFound:
@@ -69,29 +69,32 @@ def push(image, phase):
     request_path = request_path.format(challenge_pk)
     response = make_request(request_path, "GET")
     max_docker_image_size = response.get('max_docker_image_size')
-
-    docker_image_size = docker_image.__dict__.get('attrs').get('VirtualSize')
-    if docker_image_size > max_docker_image_size:
-        max_docker_image_size = convert_bytes_to(max_docker_image_size, 'gb')
-        message = (
-            "\nError: Image is too large. The maximum image size allowed is {} GB".format(max_docker_image_size)
-        )
-        notify_user(message, color="red")
-        sys.exit(1)
-
+    print(max_docker_image_size)
+    print("D")
+    # docker_image_size = docker_image.__dict__.get('attrs').get('VirtualSize')
+    # if docker_image_size > max_docker_image_size:
+    #     max_docker_image_size = convert_bytes_to(max_docker_image_size, 'gb')
+    #     message = (
+    #         "\nError: Image is too large. The maximum image size allowed is {} GB".format(max_docker_image_size)
+    #     )
+    #     notify_user(message, color="red")
+    #     sys.exit(1)
+    print("C")
     request_path = URLS.get_aws_credentials.value
     request_path = request_path.format(phase)
 
     response = make_request(request_path, "GET")
+    print("D")
     federated_user = response["success"]["federated_user"]
     repository_uri = response["success"]["docker_repository_uri"]
-
+    print("E")
     if ENVIRONMENT is "PRODUCTION":
+        print("PROD")
         AWS_ACCOUNT_ID = federated_user["FederatedUser"]["FederatedUserId"].split(":")[0]
         AWS_SERVER_PUBLIC_KEY = federated_user["Credentials"]["AccessKeyId"]
         AWS_SERVER_SECRET_KEY = federated_user["Credentials"]["SecretAccessKey"]
         SESSION_TOKEN = federated_user["Credentials"]["SessionToken"]
-
+        print("F")
         ecr_client = boto3.client(
             "ecr",
             region_name="us-east-1",
@@ -110,7 +113,8 @@ def push(image, phase):
         registry = token["authorizationData"][0]["proxyEndpoint"]
         docker_client.login(username, password, registry=registry, dockercfg_path=os.getcwd())
 
-    elif ENVIRONMENT is "TEST":
+    else:
+        print("TEST")
         repository_uri = "localhost:5000/{0}".format(repository_uri.split("/")[1])
 
     # Tag and push docker image and create a submission if successfully pushed

@@ -1,3 +1,4 @@
+import docker
 import json
 import responses
 
@@ -94,10 +95,18 @@ class TestMakeSubmission(BaseTestClass):
             status=200,
         )
 
-        # To get AWS Credentials
         url = "{}{}"
         responses.add(
             responses.POST,
+            url.format(API_HOST_URL, URLS.make_submission.value).format("10", "2"),
+            json=self.submission,
+            status=200,
+        )
+
+        # To get AWS Credentials
+        url = "{}{}"
+        responses.add(
+            responses.GET,
             url.format(API_HOST_URL, URLS.get_aws_credentials.value).format("2"),
             json=json.loads(submission_response.aws_credentials),
             status=200,
@@ -106,7 +115,7 @@ class TestMakeSubmission(BaseTestClass):
         # To get Challenge Phase Details
         url = "{}{}"
         responses.add(
-            responses.POST,
+            responses.GET,
             url.format(API_HOST_URL, URLS.challenge_phase_details.value).format("2"),
             json=json.loads(challenge_response.challenge_phase_details),
             status=200,
@@ -115,11 +124,13 @@ class TestMakeSubmission(BaseTestClass):
         # To get Challenge Details
         url = "{}{}"
         responses.add(
-            responses.POST,
-            url.format(API_HOST_URL, URLS.challenge_details.value).format("2"),
+            responses.GET,
+            url.format(API_HOST_URL, URLS.challenge_details.value).format("10"),
             json=json.loads(challenge_response.challenge_details),
             status=200,
         )
+
+        responses.add_passthru('http+docker://localhost/')
 
     @responses.activate
     def test_make_submission_when_file_is_not_valid(self):
@@ -201,12 +212,9 @@ class TestMakeSubmission(BaseTestClass):
 
         runner = CliRunner()
         with runner.isolated_filesystem():
-            with open("test_file.txt", "w") as f:
-                f.write("1 2 3 4 5 6")
-
             result = runner.invoke(
                 push,
-                ["alpine:3.6", "-p", "2"],
+                ["alpine:3.5", "-p", "2"],
             )
             print(result.output.strip())
             assert result.exit_code == 0
