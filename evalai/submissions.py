@@ -105,6 +105,7 @@ def push(image, phase, url):
     federated_user = response["success"]["federated_user"]
     repository_uri = response["success"]["docker_repository_uri"]
 
+    # Default Environment
     if ENVIRONMENT == "PRODUCTION":
         AWS_ACCOUNT_ID = federated_user["FederatedUser"][
             "FederatedUserId"
@@ -139,7 +140,8 @@ def push(image, phase, url):
             username, password, registry=registry, dockercfg_path=os.getcwd()
         )
 
-    if ENVIRONMENT == "TEST":
+    # Development and Test Environment
+    else:
         repository_uri = "{0}/{1}".format(url, repository_uri.split("/")[1])
 
     # Tag and push docker image and create a submission if successfully pushed
