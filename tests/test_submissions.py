@@ -4,6 +4,7 @@ import os
 import pytest
 import responses
 import socket
+import uuid
 
 from click.testing import CliRunner
 from datetime import datetime
@@ -126,6 +127,15 @@ class TestMakeSubmission(BaseTestClass):
             status=200,
         )
 
+        # To get Challenge Phase Details using slug
+        url = "{}{}"
+        responses.add(
+            responses.GET,
+            url.format(API_HOST_URL, URLS.phase_details_using_slug.value).format("philip-phase-2019"),
+            json=json.loads(challenge_response.challenge_phase_details_slug),
+            status=200,
+        )
+
         # To get Challenge Details
         url = "{}{}"
         responses.add(
@@ -215,20 +225,22 @@ class TestMakeSubmission(BaseTestClass):
             return port
         registry_port = get_open_port()
         client = docker.from_env()
+        image_tag = "evalai-push-test:v1"
+        client.images.build(path=os.path.join(os.path.dirname(__file__), "data"), tag=image_tag)
         container = client.containers.run("registry:2", name="registry-test", detach=True, ports={"5000/tcp": registry_port}, auto_remove=True)
         def test_make_submission_for_docker_based_challenge_teardown():
             container.stop(timeout = 1)
         request.addfinalizer(test_make_submission_for_docker_based_challenge_teardown)
-        return registry_port
+        return (registry_port, image_tag)
 
     @responses.activate
     def test_make_submission_for_docker_based_challenge(self, test_make_submission_for_docker_based_challenge_setup):
-        registry_port = test_make_submission_for_docker_based_challenge_setup
+        registry_port, image_tag = test_make_submission_for_docker_based_challenge_setup
         runner = CliRunner()
         with runner.isolated_filesystem():
             result = runner.invoke(
                 push,
-                ["hello-world:latest", "-p", "2", "-u", "localhost:{0}".format(registry_port)],
+                [image_tag, "-p", "philip-phase-2019", "-u", "localhost:{0}".format(registry_port)],
             )
             print(result.output.strip())
             assert result.exit_code == 0

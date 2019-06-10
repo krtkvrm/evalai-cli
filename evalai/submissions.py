@@ -22,6 +22,7 @@ from evalai.utils.submissions import (
 )
 from evalai.utils.urls import URLS
 from evalai.utils.config import (
+    ENVIRONMENT,
     EVALAI_HOST_URLS,
     HOST_URL_FILE_PATH,
     LOCAL_DOCKER_REGISTRY_URI,
