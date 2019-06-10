@@ -13,7 +13,7 @@ from evalai.utils.common import notify_user
 from evalai.utils.requests import make_request
 from evalai.utils.submissions import display_submission_details, convert_bytes_to
 from evalai.utils.urls import URLS
-from evalai.utils.config import ENVIRONMENT
+from evalai.utils.config import ENVIRONMENT, LOCAL_DOCKER_REGISTRY_URI
 
 
 @click.group(invoke_without_command=True)
@@ -34,9 +34,17 @@ def submission(submission_id):
     "-p",
     "--phase",
     help="challenge-phase-id to which image is to be pushed",
-    required=True,
+    required=True
 )
-def push(image, phase):
+# Dependency Injection for Local Registry URI for Dev and Test environment
+@click.option(
+    "-u",
+    "--url",
+    help="Docker Registry URI where image will be pushed",
+    required=False,
+    default=LOCAL_DOCKER_REGISTRY_URI
+)
+def push(image, phase, url):
     """
     Push docker image to a particular challenge phase.
     """
@@ -49,7 +57,6 @@ def push(image, phase):
         sys.exit(1)
 
     tag = image.split(":")[1]
-    print("TAG: {}".format(tag))
     docker_client = docker.from_env()
     try:
         docker_image = docker_client.images.get(image)
@@ -69,8 +76,6 @@ def push(image, phase):
     request_path = request_path.format(challenge_pk)
     response = make_request(request_path, "GET")
     max_docker_image_size = response.get('max_docker_image_size')
-    print(max_docker_image_size)
-    print("D")
     # docker_image_size = docker_image.__dict__.get('attrs').get('VirtualSize')
     # if docker_image_size > max_docker_image_size:
     #     max_docker_image_size = convert_bytes_to(max_docker_image_size, 'gb')
@@ -79,22 +84,17 @@ def push(image, phase):
     #     )
     #     notify_user(message, color="red")
     #     sys.exit(1)
-    print("C")
     request_path = URLS.get_aws_credentials.value
     request_path = request_path.format(phase)
 
     response = make_request(request_path, "GET")
-    print("D")
     federated_user = response["success"]["federated_user"]
     repository_uri = response["success"]["docker_repository_uri"]
-    print("E")
-    if ENVIRONMENT is "PRODUCTION":
-        print("PROD")
+    if ENVIRONMENT == "PRODUCTION":
         AWS_ACCOUNT_ID = federated_user["FederatedUser"]["FederatedUserId"].split(":")[0]
         AWS_SERVER_PUBLIC_KEY = federated_user["Credentials"]["AccessKeyId"]
         AWS_SERVER_SECRET_KEY = federated_user["Credentials"]["SecretAccessKey"]
         SESSION_TOKEN = federated_user["Credentials"]["SessionToken"]
-        print("F")
         ecr_client = boto3.client(
             "ecr",
             region_name="us-east-1",
@@ -113,9 +113,8 @@ def push(image, phase):
         registry = token["authorizationData"][0]["proxyEndpoint"]
         docker_client.login(username, password, registry=registry, dockercfg_path=os.getcwd())
 
-    else:
-        print("TEST")
-        repository_uri = "localhost:5000/{0}".format(repository_uri.split("/")[1])
+    if ENVIRONMENT == "TEST":
+        repository_uri = "{0}/{1}".format(url, repository_uri.split("/")[1])
 
     # Tag and push docker image and create a submission if successfully pushed
     docker_client.images.get(image).tag("{}:{}".format(repository_uri, tag))

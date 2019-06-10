@@ -1,6 +1,11 @@
 import docker
 import json
+import pytest
+import time
+import os
 import responses
+import socket
+from evalai.utils.config import ENVIRONMENT
 
 from click.testing import CliRunner
 from datetime import datetime
@@ -198,24 +203,33 @@ class TestMakeSubmission(BaseTestClass):
             )
             assert result.exit_code == 0
             assert result.output.strip() == expected
-    
-    @responses.activate
-    def test_make_submission_for_docker_based_challenge(self):
-        # expected = "{}\n{}".format(
-        #     expected,
-        #     (
-        #         "Your file {} with the ID {} is successfully submitted.\n\n"
-        #         "You can use `evalai submission {}` to view this "
-        #         "submission's status."
-        #     ).format("test_file.txt", "9", "9"),
-        # )
 
+
+    @pytest.fixture()
+    def test_make_submission_for_docker_based_challenge_setup(self, request):
+        def get_open_port():
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.bind(("",0))
+            s.listen(1)
+            port = s.getsockname()[1]
+            s.close()
+            return port
+        registry_port = get_open_port()
+        client = docker.from_env()
+        container = client.containers.run("registry:2", name="registry-test", detach=True, ports={"5000/tcp": registry_port}, auto_remove=True)
+        def test_make_submission_for_docker_based_challenge_teardown():
+            container.stop(timeout = 1)
+        request.addfinalizer(test_make_submission_for_docker_based_challenge_teardown)
+        return registry_port
+
+    @responses.activate
+    def test_make_submission_for_docker_based_challenge(self, test_make_submission_for_docker_based_challenge_setup):
+        registry_port = test_make_submission_for_docker_based_challenge_setup
         runner = CliRunner()
         with runner.isolated_filesystem():
             result = runner.invoke(
                 push,
-                ["alpine:3.5", "-p", "2"],
+                ["hello-world:latest", "-p", "2", "-u", "localhost:{0}".format(registry_port)],
             )
             print(result.output.strip())
             assert result.exit_code == 0
-            assert result.output.strip() == "HELLO"
