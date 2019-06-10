@@ -55,7 +55,7 @@ def submission(submission_id):
     "--url",
     help="Docker Registry URI where image will be pushed",
     required=False,
-    default=LOCAL_DOCKER_REGISTRY_URI
+    default=LOCAL_DOCKER_REGISTRY_URI,
 )
 def push(image, phase, url):
     """
@@ -106,11 +106,13 @@ def push(image, phase, url):
     repository_uri = response["success"]["docker_repository_uri"]
 
     if ENVIRONMENT == "PRODUCTION":
-        AWS_ACCOUNT_ID = federated_user["FederatedUser"]["FederatedUserId"].split(
-            ":"
-        )[0]
+        AWS_ACCOUNT_ID = federated_user["FederatedUser"][
+            "FederatedUserId"
+        ].split(":")[0]
         AWS_SERVER_PUBLIC_KEY = federated_user["Credentials"]["AccessKeyId"]
-        AWS_SERVER_SECRET_KEY = federated_user["Credentials"]["SecretAccessKey"]
+        AWS_SERVER_SECRET_KEY = federated_user["Credentials"][
+            "SecretAccessKey"
+        ]
         SESSION_TOKEN = federated_user["Credentials"]["SessionToken"]
 
         ecr_client = boto3.client(
@@ -121,10 +123,14 @@ def push(image, phase, url):
             aws_session_token=SESSION_TOKEN,
         )
 
-        token = ecr_client.get_authorization_token(registryIds=[AWS_ACCOUNT_ID])
+        token = ecr_client.get_authorization_token(
+            registryIds=[AWS_ACCOUNT_ID]
+        )
         ecr_client = boto3.client("ecr", region_name="us-east-1")
         username, password = (
-            base64.b64decode(token["authorizationData"][0]["authorizationToken"])
+            base64.b64decode(
+                token["authorizationData"][0]["authorizationToken"]
+            )
             .decode()
             .split(":")
         )
