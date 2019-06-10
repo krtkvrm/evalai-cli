@@ -4,7 +4,6 @@ import os
 import pytest
 import responses
 import socket
-import uuid
 
 from click.testing import CliRunner
 from datetime import datetime
@@ -14,7 +13,7 @@ from evalai.challenges import challenge
 from evalai.submissions import submission, push
 from tests.data import submission_response, challenge_response
 
-from evalai.utils.config import API_HOST_URL, ENVIRONMENT
+from evalai.utils.config import API_HOST_URL
 from evalai.utils.urls import URLS
 from .base import BaseTestClass
 
