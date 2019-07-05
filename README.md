@@ -12,6 +12,13 @@ EvalAI-CLI is designed to extend the functionality of the EvalAI web application
 [![Documentation Status](https://readthedocs.org/projects/markdown-guide/badge/?version=latest)](https://evalai-cli.cloudcv.org)
 
 
+## Installation
+
+EvalAI-CLI and its required dependencies can be installed using pip:
+```sh
+pip install evalai
+```
+
 ## Contributing Guidelines
 
 If you are interested in contributing to EvalAI-CLI, follow our [contribution guidelines](https://github.com/Cloud-CV/evalai-cli/blob/master/.github/CONTRIBUTING.md).
