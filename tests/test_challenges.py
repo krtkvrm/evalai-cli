@@ -457,7 +457,7 @@ class TestParticipantChallengesConditions(BaseTestClass):
 
 
 class TestParticipantOrHostTeamChallenges(BaseTestClass):
-    def setup(self):
+    def setup(self): #
 
         challenge_data = json.loads(challenge_response.challenges)
         host_team_data = json.loads(challenge_response.challenge_host_teams)
